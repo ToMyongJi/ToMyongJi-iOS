@@ -10,12 +10,12 @@ import Foundation
 // MARK: - 영수증 조회
 public struct ReceiptResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: [Receipt]
     
-    public init(statusCode: Int, statusMessage: String, data: [Receipt]) {
+    public init(statusCode: Int, message: String, data: [Receipt]) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -31,12 +31,12 @@ public struct ReceiptData: Codable {
 // MARK: - 학생회를 위한 영수증 조회
 public struct ReceiptForStudentClubResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: RecieptForStudentClubData
     
-    public init(statusCode: Int, statusMessage: String, data: RecieptForStudentClubData) {
+    public init(statusCode: Int, message: String, data: RecieptForStudentClubData) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -71,12 +71,12 @@ public struct CreateReceiptRequest: Codable {
 
 public struct CreateReceiptResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: SingleReceiptData
     
-    public init(statusCode: Int, statusMessage: String, data: SingleReceiptData) {
+    public init(statusCode: Int, message: String, data: SingleReceiptData) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -122,12 +122,12 @@ public struct Receipt: Identifiable, Codable {
 // MARK: - 영수증 삭제
 public struct DeleteReceiptResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: SingleReceiptData
     
-    public init(statusCode: Int, statusMessage: String, data: SingleReceiptData) {
+    public init(statusCode: Int, message: String, data: SingleReceiptData) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -151,12 +151,12 @@ public struct UpdateReceiptRequest: Codable {
 
 public struct UpdateReceiptResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: SingleReceiptData
     
-    public init(statusCode: Int, statusMessage: String, data: SingleReceiptData) {
+    public init(statusCode: Int, message: String, data: SingleReceiptData) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -172,12 +172,12 @@ public struct OCRUploadRequest: Codable {
 
 public struct OCRUploadResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: OCRData
     
-    public init(statusCode: Int, statusMessage: String, data: OCRData) {
+    public init(statusCode: Int, message: String, data: OCRData) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -198,12 +198,12 @@ public struct OCRData: Codable {
 
 public struct ReceiptSearchResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: [ReceiptSearchData]
     
-    public init(statusCode: Int, statusMessage: String, data: [ReceiptSearchData]) {
+    public init(statusCode: Int, message: String, data: [ReceiptSearchData]) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }

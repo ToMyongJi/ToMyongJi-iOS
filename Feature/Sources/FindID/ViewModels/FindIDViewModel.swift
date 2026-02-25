@@ -44,7 +44,7 @@ class FindIDViewModel {
                     self.isSuccess = true
                     self.email = ""
                 } else {
-                    self.alertMessage = response.statusMessage
+                    self.alertMessage = response.message
                     self.showAlert = true
                     self.isSuccess = false
                 }

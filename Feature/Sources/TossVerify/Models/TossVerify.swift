@@ -24,13 +24,11 @@ public struct TossVerifyRequest: Codable {
 
 public struct TossVerifyResponse: Codable {
     let statusCode: Int
-    let statusMessage: String? // 서버에서 사용하는 필드
-    let message: String? // 대안 필드
+    let message: String?
     let data: [TossVerifyData]
     
-    public init(statusCode: Int, statusMessage: String?, message: String?, data: [TossVerifyData]) {
+    public init(statusCode: Int, message: String?, data: [TossVerifyData]) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
         self.message = message
         self.data = data
     }
@@ -38,7 +36,6 @@ public struct TossVerifyResponse: Codable {
     // MARK: - CodingKeys (서버 응답과 정확히 매칭)
     enum CodingKeys: String, CodingKey {
         case statusCode
-        case statusMessage
         case message
         case data
     }
@@ -48,14 +45,13 @@ public struct TossVerifyResponse: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         statusCode = try container.decode(Int.self, forKey: .statusCode)
-        statusMessage = try container.decodeIfPresent(String.self, forKey: .statusMessage)
         message = try container.decodeIfPresent(String.self, forKey: .message)
         data = try container.decodeIfPresent([TossVerifyData].self, forKey: .data) ?? []
     }
     
     // MARK: - 편의 메서드
     var errorMessage: String? {
-        return statusMessage ?? message
+        return message
     }
 }
 
@@ -69,7 +65,6 @@ public struct TossVerifyAlternativeResponse: Codable {
     func toTossVerifyResponse() -> TossVerifyResponse {
         return TossVerifyResponse(
             statusCode: code ?? 0,
-            statusMessage: message,
             message: message,
             data: result ?? []
         )
