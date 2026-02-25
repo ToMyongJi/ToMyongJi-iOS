@@ -18,12 +18,12 @@ public struct FindIDRequest: Codable {
 
 public struct FindIDResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: String
     
-    public init(statusCode: Int, statusMessage: String, data: String) {
+    public init(statusCode: Int, message: String, data: String) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }

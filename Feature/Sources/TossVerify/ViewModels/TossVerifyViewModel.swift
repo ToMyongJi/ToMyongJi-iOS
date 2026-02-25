@@ -97,7 +97,7 @@ class TossVerifyViewModel {
                 }
             } receiveValue: { [weak self] response in
                 guard let self else { return }
-                print("토스 인증 성공 - 상태코드: \(response.statusCode), 메시지: \(response.statusMessage ?? "없음"), 데이터 개수: \(response.data.count)")
+                print("토스 인증 성공 - 상태코드: \(response.statusCode), 메시지: \(response.message ?? "없음"), 데이터 개수: \(response.data.count)")
                 if response.data.isEmpty {
                     print("경고: 서버에서 데이터를 반환하지 않았습니다.")
                 }

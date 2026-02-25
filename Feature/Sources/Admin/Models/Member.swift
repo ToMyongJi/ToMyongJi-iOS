@@ -16,7 +16,7 @@ struct Member: Codable, Identifiable {
 
 struct GetMemberResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: [Member]
 }
 
@@ -28,12 +28,12 @@ struct AddMemberRequest: Codable {
 
 struct AddMemberResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: Member
 }
 
 struct DeleteMemberResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: Member
 }

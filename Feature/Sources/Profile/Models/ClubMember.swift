@@ -29,7 +29,7 @@ struct AddClubMemberRequest: Codable {
 
 struct AddClubMemberResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: ClubMemberData?
 }
 
@@ -41,12 +41,12 @@ struct ClubMemberData: Codable {
 
 struct GetClubMembersResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: [ClubMemberData]
 }
 
 struct DeleteClubMemberResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: ClubMemberData
 }

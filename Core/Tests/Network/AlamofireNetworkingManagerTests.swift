@@ -111,7 +111,7 @@ extension AlamofireNetworkingManagerTests {
     
     struct TestResponse: Codable {
         let statusCode: Int
-        let statusMessage: String
+        let message: String
         let data: [TestResponseData]
     }
     
