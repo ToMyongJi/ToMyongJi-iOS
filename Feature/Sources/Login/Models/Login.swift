@@ -20,12 +20,12 @@ public struct LoginRequest: Codable {
 
 public struct LoginResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: LoginData
     
-    public init(statusCode: Int, statusMessage: String, data: LoginData) {
+    public init(statusCode: Int, message: String, data: LoginData) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }

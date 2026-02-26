@@ -9,7 +9,7 @@ import Foundation
 
 struct ProfileResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: ProfileData
 }
 
@@ -22,7 +22,7 @@ struct ProfileData: Codable {
 
 struct ClubResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: [ClubData]
 }
 
@@ -33,7 +33,7 @@ struct ClubData: Codable {
 
 struct DeleteUserResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: EmptyData?
 }
 

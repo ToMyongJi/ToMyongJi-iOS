@@ -15,7 +15,7 @@ struct President: Codable {
 
 struct GetPresidentResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: President
 }
 
@@ -27,7 +27,7 @@ struct AddPresidentRequest: Codable {
 
 struct AddPresidentResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: President
 }
 
@@ -39,7 +39,7 @@ struct UpdatePresidentRequest: Codable {
 
 struct UpdatePresidentResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: President
 }
 

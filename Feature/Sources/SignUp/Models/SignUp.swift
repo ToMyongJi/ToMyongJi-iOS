@@ -32,12 +32,12 @@ public struct SignUpRequest: Codable {
 
 public struct SignUpResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: Int
     
-    public init(statusCode: Int, statusMessage: String, data: Int) {
+    public init(statusCode: Int, message: String, data: Int) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -63,12 +63,12 @@ public struct VerifyCodeRequest: Codable {
 
 public struct VerifyCodeResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: Bool
     
-    public init(statusCode: Int, statusMessage: String, data: Bool) {
+    public init(statusCode: Int, message: String, data: Bool) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -76,12 +76,12 @@ public struct VerifyCodeResponse: Codable {
 // 아이디 중복 체크
 public struct UserIdCheckResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: Bool
     
-    public init(statusCode: Int, statusMessage: String, data: Bool) {
+    public init(statusCode: Int, message: String, data: Bool) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
@@ -111,12 +111,12 @@ public struct ClubVerifyRequest: Codable {
 
 public struct ClubVerifyResponse: Codable {
     let statusCode: Int
-    let statusMessage: String
+    let message: String
     let data: Bool
     
-    public init(statusCode: Int, statusMessage: String, data: Bool) {
+    public init(statusCode: Int, message: String, data: Bool) {
         self.statusCode = statusCode
-        self.statusMessage = statusMessage
+        self.message = message
         self.data = data
     }
 }
