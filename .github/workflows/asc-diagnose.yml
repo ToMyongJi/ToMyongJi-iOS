@@ -1,0 +1,21 @@
+name: diagnose-app-store-connect
+
+# 배포 실패 원인이 "코드"인지 "Apple 계정"인지 가리기 위한 진단 전용 워크플로.
+# 빌드를 하지 않으므로 30초 안에 끝난다. Actions 탭에서 수동으로 실행한다.
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    name: ASC API 진단
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install jwt gem
+        run: gem install jwt --no-document
+
+      - name: Query App Store Connect API
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
+        run: ruby .github/scripts/asc_diagnose.rb
