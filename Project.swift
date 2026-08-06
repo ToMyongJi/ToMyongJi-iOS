@@ -5,9 +5,9 @@ let settings: Settings = .settings(
     base: [:],
     configurations: [
         .release(name: "Release", settings: [
-            "DEVELOPMENT_TEAM": "FN67GXC5GH", // 개발팀 ID
+            "DEVELOPMENT_TEAM": "G9YRNF4688", // 개발팀 ID
             "CODE_SIGN_STYLE": "Manual",
-            "PROVISIONING_PROFILE_SPECIFIER": "match AppStore com.tomyongji.ios",
+            "PROVISIONING_PROFILE_SPECIFIER": "match AppStore com.jungmin.tomyongji.ios",
             "CODE_SIGN_IDENTITY": "Apple Distribution"
         ]),
         .debug(name: "Debug", settings: [:])
@@ -28,7 +28,7 @@ let project = Project(
             name: "ToMyongJi-iOS",
             destinations: [.iPhone],
             product: .app,
-            bundleId: "com.tomyongji.ios",
+            bundleId: "com.jungmin.tomyongji.ios",
             infoPlist: .file(path: "App/Resources/Info.plist"),
             sources: ["App/Sources/**"],
             resources: [

@@ -2,7 +2,7 @@ default_platform(:ios)
 
 skip_docs
 
-APP_IDENTIFIER = "com.tomyongji.ios".freeze
+APP_IDENTIFIER = "com.jungmin.tomyongji.ios".freeze
 
 platform :ios do
   desc "인증서와 프로비저닝 프로파일 동기화"

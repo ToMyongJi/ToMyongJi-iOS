@@ -16,7 +16,7 @@ require "net/http"
 require "openssl"
 require "uri"
 
-BUNDLE_ID = "com.tomyongji.ios".freeze
+BUNDLE_ID = "com.jungmin.tomyongji.ios".freeze
 
 def id_tail(value)
   v = value.to_s
@@ -101,7 +101,7 @@ def request(token, path, description)
 end
 
 # 이 키가 볼 수 있는 앱 전체. 여기 나오는 목록이 곧 "키가 소속된 팀"의 앱이다.
-# 목록에 com.tomyongji.ios 가 없으면 키가 다른 계정의 것이라는 뜻이다.
+# 목록에 대상 번들 ID가 없으면 키가 다른 계정의 것이라는 뜻이다.
 apps_res = request(
   token,
   "/v1/apps?fields[apps]=bundleId,name,sku&limit=50",
