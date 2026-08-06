@@ -55,30 +55,30 @@ struct CreateReciptSheetView: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color("gray_20"), lineWidth: 1))
                 }
                 
-                Button {
-                    dismiss()
-                    onSelectOCR()
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "camera.viewfinder")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 20, height: 20)
-                        Text("OCR 업로드")
-                            .font(.custom("GmarketSansMedium", size: 14))
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 15, height: 15)
-                            .font(.title2.weight(.medium))
-                            .foregroundStyle(Color("gray_90"))
-                    }
-                    .foregroundStyle(Color("gray_90"))
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color("gray_20"), lineWidth: 1))
-                }
+//                Button {
+//                    dismiss()
+//                    onSelectOCR()
+//                } label: {
+//                    HStack(spacing: 10) {
+//                        Image(systemName: "camera.viewfinder")
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fit)
+//                            .frame(width: 20, height: 20)
+//                        Text("OCR 업로드")
+//                            .font(.custom("GmarketSansMedium", size: 14))
+//                        Spacer()
+//                        Image(systemName: "chevron.right")
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fit)
+//                            .frame(width: 15, height: 15)
+//                            .font(.title2.weight(.medium))
+//                            .foregroundStyle(Color("gray_90"))
+//                    }
+//                    .foregroundStyle(Color("gray_90"))
+//                    .frame(maxWidth: .infinity)
+//                    .padding()
+//                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color("gray_20"), lineWidth: 1))
+//                }
                 
                 Button {
                     dismiss()
