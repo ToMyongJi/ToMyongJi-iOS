@@ -10,8 +10,11 @@ jobs:
     name: ASC API 진단
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
+      # 러너의 시스템 gem 디렉터리는 쓰기 권한이 없어 sudo 가 필요하다.
       - name: Install jwt gem
-        run: gem install jwt --no-document
+        run: sudo gem install jwt --no-document
 
       - name: Query App Store Connect API
         env:
