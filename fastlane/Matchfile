@@ -4,7 +4,7 @@ type("appstore")
 app_identifier(["com.jungmin.tomyongji.ios"])
 # 팀별로 브랜치를 분리한다. main 브랜치에는 옛 팀(FN67GXC5GH)의 인증서가 그대로 남아 있고,
 # 인증서는 팀에 귀속되므로 재사용할 수 없다. 새 팀 자산은 팀 ID 이름의 브랜치에 따로 쌓는다.
-git_branch("G9YRNF4688")
+git_branch("3XAZ3HRNQL")
 keychain_name("build.keychain-db")
-team_id("G9YRNF4688")
+team_id("3XAZ3HRNQL")
 git_basic_authorization(ENV["MATCH_GIT_BASIC_AUTHORIZATION"])

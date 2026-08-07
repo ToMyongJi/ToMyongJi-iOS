@@ -5,7 +5,7 @@ let settings: Settings = .settings(
     base: [:],
     configurations: [
         .release(name: "Release", settings: [
-            "DEVELOPMENT_TEAM": "G9YRNF4688", // 개발팀 ID
+            "DEVELOPMENT_TEAM": "3XAZ3HRNQL", // 개발팀 ID
             "CODE_SIGN_STYLE": "Manual",
             "PROVISIONING_PROFILE_SPECIFIER": "match AppStore com.jungmin.tomyongji.ios",
             "CODE_SIGN_IDENTITY": "Apple Distribution"
