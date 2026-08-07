@@ -2,6 +2,8 @@ default_platform(:ios)
 
 skip_docs
 
+APP_IDENTIFIER = "com.jungmin.tomyongji.ios".freeze
+
 platform :ios do
   desc "인증서와 프로비저닝 프로파일 동기화"
   lane :sync_certificates do
@@ -18,48 +20,42 @@ platform :ios do
       add_to_search_list: true
     )
 
-    app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_KEY"]),
-      duration: 1200,
-      in_house: false
-    )
+    setup_asc_api_key
 
-    match(
-      type: "appstore",
-      app_identifier: "com.tomyongji.ios",
-      keychain_name: keychain_name,
-      keychain_password: keychain_password,
-      force: true,
-      readonly: false,
-      generate_apple_certs: true
-    )
+    with_asc_error_handling("인증서 동기화 (match)") do
+      match(
+        type: "appstore",
+        app_identifier: APP_IDENTIFIER,
+        keychain_name: keychain_name,
+        keychain_password: keychain_password,
+        force: true,
+        readonly: false,
+        generate_apple_certs: true
+      )
+    end
   end
 
   desc "TestFlight 배포 (develop 브랜치용)"
   lane :beta do
-    app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_KEY"]),
-      duration: 1200,
-      in_house: false
-    )
-    
+    log_deploy_context("beta (TestFlight)")
+
+    setup_asc_api_key
+
     app_version = get_version_number(
       xcodeproj: "ToMyongJi.xcodeproj",
       target: "ToMyongJi-iOS"
     )
 
-    latest_build = latest_testflight_build_number(
-      app_identifier: "com.tomyongji.ios",
-      version: app_version,
-      initial_build_number: 0
-    )
+    latest_build = with_asc_error_handling("TestFlight 최신 빌드 번호 조회") do
+      latest_testflight_build_number(
+        app_identifier: APP_IDENTIFIER,
+        version: app_version,
+        initial_build_number: 0
+      )
+    end
 
     new_build_number = latest_build + 1
-    
+
     UI.message("Latest build on TestFlight for version #{app_version} is: #{latest_build}")
     UI.success("Next build number will be: #{new_build_number}")
 
@@ -74,32 +70,32 @@ platform :ios do
       scheme: "ToMyongJi-iOS",
       workspace: "ToMyongJi.xcworkspace"
     )
-    
-    upload_to_testflight(skip_waiting_for_build_processing: true)
+
+    with_asc_error_handling("TestFlight 업로드") do
+      upload_to_testflight(skip_waiting_for_build_processing: true)
+    end
   end
 
   desc "App Store 배포 (main 브랜치용)"
   lane :release do
-    app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_KEY"]),
-      duration: 1200,
-      in_house: false
-    )
-    
+    log_deploy_context("release (App Store)")
+
+    setup_asc_api_key
+
     app_version = get_version_number(
       xcodeproj: "ToMyongJi.xcodeproj",
       target: "ToMyongJi-iOS"
     )
 
-    latest_build = app_store_build_number(
-      app_identifier: "com.tomyongji.ios",
-      version: app_version,
-      live: false,
-      initial_build_number: 0
-    )
-    
+    latest_build = with_asc_error_handling("App Store 최신 빌드 번호 조회") do
+      app_store_build_number(
+        app_identifier: APP_IDENTIFIER,
+        version: app_version,
+        live: false,
+        initial_build_number: 0
+      )
+    end
+
     new_build_number = latest_build + 1
     UI.message("Latest build on App Store Connect for version #{app_version} is: #{latest_build}")
     UI.success("New App Store build number will be: #{new_build_number}")
@@ -116,11 +112,99 @@ platform :ios do
       workspace: "ToMyongJi.xcworkspace"
     )
 
-    upload_to_app_store(
-      force: true,
-      submit_for_review: true,
-      automatic_release: false,
-      precheck_include_in_app_purchases: false
-    )
+    with_asc_error_handling("App Store 업로드 및 심사 제출") do
+      upload_to_app_store(
+        force: true,
+        submit_for_review: true,
+        automatic_release: false,
+        precheck_include_in_app_purchases: false
+      )
+    end
   end
+end
+
+# MARK: - Helpers
+# 레인이 아니라 Fastfile 안에서 재사용하는 헬퍼들.
+
+# 세 레인에 동일하게 중복돼 있던 App Store Connect API 키 설정을 한곳으로 모은 것.
+# 여기서 만든 키는 lane_context에 저장되어 이후 액션들이 자동으로 사용한다.
+# 키가 비어 있으면 빌드를 시작하기 전에 어떤 값이 없는지 이름으로 알려주고 끝낸다.
+def setup_asc_api_key
+  missing = %w[
+    APP_STORE_CONNECT_API_KEY_ID
+    APP_STORE_CONNECT_API_KEY_ISSUER_ID
+    APP_STORE_CONNECT_API_KEY_KEY
+  ].select { |name| ENV[name].to_s.strip.empty? }
+
+  unless missing.empty?
+    UI.user_error!("App Store Connect API 키 환경변수가 비어 있습니다: #{missing.join(', ')}")
+  end
+
+  app_store_connect_api_key(
+    key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+    issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+    key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_KEY"]),
+    duration: 1200,
+    in_house: false
+  )
+end
+
+# 배포가 "어느 계정 / 어느 팀"으로 나가는지 로그 첫머리에 남긴다.
+# 계정·팀이 어긋나 생긴 실패를 로그 상단에서 바로 알아보기 위한 것.
+# 주의: APP_STORE_CONNECT_API_KEY_KEY(비밀키 본문)는 절대 출력하지 않는다.
+#      Key ID / Issuer ID는 GitHub Secrets로 등록돼 있어 그대로 찍으면 로그에서 ***로 마스킹된다.
+#      그래서 마스킹을 피하면서 "어느 키인지" 대조는 되도록 뒤 4자리만 남긴다.
+def log_deploy_context(lane_description)
+  UI.header("배포 대상")
+  UI.message("레인          : #{lane_description}")
+  UI.message("Bundle ID     : #{APP_IDENTIFIER}")
+  UI.message("Team ID       : #{CredentialsManager::AppfileConfig.try_fetch_value(:team_id)}")
+  UI.message("Apple ID      : #{CredentialsManager::AppfileConfig.try_fetch_value(:apple_id)}")
+  UI.message("ASC Key ID    : #{id_tail(ENV['APP_STORE_CONNECT_API_KEY_ID'])}")
+  UI.message("ASC Issuer ID : #{id_tail(ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'])}")
+end
+
+# 식별자의 뒤 4자리만 남긴다. GitHub Actions는 시크릿 "전체 값"만 마스킹하므로
+# 이렇게 자르면 로그에 남고, App Store Connect 화면의 값과 눈으로 대조할 수 있다.
+def id_tail(value)
+  v = value.to_s
+  return "(비어 있음)" if v.strip.empty?
+  return "(너무 짧음)" if v.length < 4
+
+  "...#{v[-4..]}"
+end
+
+# App Store Connect API를 호출하는 구간을 감싸, 실패 시 원인을 분류해
+# 무엇을 해야 하는지까지 알려준다. 원본 메시지도 함께 남긴다.
+def with_asc_error_handling(step_name)
+  yield
+rescue StandardError => e
+  message = e.message.to_s
+
+  guidance =
+    case message
+    when /agreement/i
+      "App Store Connect 계약이 미서명 상태이거나 만료됐습니다.\n" \
+      "Account Holder 권한으로 아래를 확인하세요:\n" \
+      "  1. developer.apple.com > Account — 멤버십이 active인지, 대기 중인 Program License Agreement가 있는지\n" \
+      "  2. App Store Connect > 계약, 세금 및 금융거래 — Active가 아닌 계약을 모두 수락"
+    when /401|unauthorized|authentication|invalid.*(token|key)/i
+      "App Store Connect API 키가 유효하지 않습니다.\n" \
+      "  - GitHub Secrets의 APP_STORE_CONNECT_API_KEY_ID / _ISSUER_ID / _KEY 를 확인하세요\n" \
+      "  - _KEY 는 .p8 파일을 base64로 인코딩한 값이어야 합니다 (Fastfile이 Base64.decode64로 디코드함)"
+    when /not found|no app|does not exist/i
+      "이 팀에서 #{APP_IDENTIFIER} 앱을 찾을 수 없습니다.\n" \
+      "  - Appfile의 team_id와 앱의 Bundle ID가 App Store Connect의 실제 상태와 일치하는지 확인하세요"
+    else
+      "미리 분류해 둔 유형에 해당하지 않는 오류입니다. 아래 원본 메시지를 확인하세요."
+    end
+
+  UI.error("────────────────────────────────────────────")
+  UI.error("실패 단계: #{step_name}")
+  UI.error("────────────────────────────────────────────")
+  UI.error(guidance)
+  UI.error("────────────────────────────────────────────")
+  UI.error("원본 오류: #{message}")
+
+  UI.user_error!("#{step_name} 실패 — 위 안내를 확인하세요")
 end
