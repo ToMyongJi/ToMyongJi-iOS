@@ -108,6 +108,39 @@ apps_res = request(
   "이 API 키로 조회되는 앱 목록"
 )
 
+# 실제 Team ID 를 확정한다.
+# App Store Connect API 는 팀 ID 를 직접 알려주는 엔드포인트가 없지만,
+# 프로비저닝 프로파일 본문(.mobileprovision 플리스트)에 TeamIdentifier 가 들어 있다.
+# Project.swift 의 DEVELOPMENT_TEAM 과 대조하기 위한 값이다.
+profiles_res = request(
+  token,
+  "/v1/profiles?fields[profiles]=name,profileType,profileContent&limit=20",
+  "프로비저닝 프로파일에서 실제 Team ID 추출"
+)
+
+if profiles_res.code == "200"
+  teams = JSON.parse(profiles_res.body).fetch("data", []).flat_map do |profile|
+    content = profile.dig("attributes", "profileContent")
+    next [] if content.nil?
+
+    plist = Base64.decode64(content)
+    plist.scan(%r{<key>TeamIdentifier</key>\s*<array>\s*<string>([A-Z0-9]+)</string>}m).flatten
+  end.uniq
+
+  puts "=" * 60
+  puts "실제 Team ID"
+  puts "=" * 60
+  if teams.empty?
+    puts "프로파일에서 Team ID 를 찾지 못했습니다."
+  else
+    teams.each { |t| puts "  #{t}" }
+    puts
+    puts "Project.swift 의 DEVELOPMENT_TEAM, Appfile / Matchfile 의 team_id 가"
+    puts "위 값과 같아야 합니다. 다르면 xcodebuild 가 프로파일을 찾지 못합니다."
+  end
+  puts
+end
+
 puts "=" * 60
 puts "판정"
 puts "=" * 60
